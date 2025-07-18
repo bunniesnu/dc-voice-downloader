@@ -32,9 +32,12 @@ export default {
 		if (audioSources.length === 0) {
 			return new Response('No audio sources found', { status: 404 });
 		}
-		const response = new Response(JSON.stringify(audioSources), {
+		if (audioSources.length > 1) {
+			return new Response('Multiple audio sources found', { status: 400 });
+		}
+		const response = new Response(audioSources[0], {
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'text/plain',
 				'Access-Control-Allow-Origin': '*',
 				'Access-Control-Allow-Methods': allowedMethods.join(', ')
 			}
