@@ -1,5 +1,18 @@
 import { load } from 'cheerio';
-import { defaultHeaders, findAudioPrefix } from './const';
+import { defaultHeaders, findAudioPrefix, vrUrlPrefix } from './const';
+
+const ParseVoiceFromHTML = (html: string) => {
+    const $ = load(html);
+    const voiceElements = $(`iframe[src*="${vrUrlPrefix}"]`);
+    const voices: string[] = [];
+    voiceElements.each((_, element) => {
+        const src = $(element).attr('src');
+        if (src) {
+            voices.push(src);
+        }
+    });
+    return voices;
+}
 
 const ParseAudiosFromHTML = (html: string) => {
     const $ = load(html);
@@ -22,4 +35,4 @@ const FetchHTML = async (url: string): Promise<string> => {
     return await response.text();
 }
 
-export { ParseAudiosFromHTML, FetchHTML };
+export { ParseVoiceFromHTML, ParseAudiosFromHTML, FetchHTML };
